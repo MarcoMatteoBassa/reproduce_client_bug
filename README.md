@@ -1,3 +1,5 @@
+One node calls periodically (from a thread each 100ms) and sequentially N different services (4 in my example) using N clients. Each call is executed calling async_send_request and waited for using "wait_for" on the returned future. The node is added to an executor (tested with both Multithreaded and Singlehtreaded). Everything apparently works fine for a while, but seldomly the wait_for will hang and never get the result, even if the server generated a response. This happens much more frequently if the load on the system is increased (using for example an online multi-thread stress test like silver.urih) or on slow machines. Adding each client to a different callback group doesn't solve the issue, even with a multithreaded executor (but reduces its frequency). Using a timer to execute the calls periodically instead of a thread doesn't help either. If the service is called again after the timeout of wait_for expired, it will usually respond properly.
+
 SETUP ENVIRONMENT:
 
 Setup a docker environment from osrf/ros:humble-desktop or install ros2 humble on Ubuntu 22.

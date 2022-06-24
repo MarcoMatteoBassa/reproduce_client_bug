@@ -5,6 +5,7 @@ SETUP ENVIRONMENT:
 Setup a docker environment from osrf/ros:humble-desktop:
 
 ./docker/build_image_humble.sh
+
 ./docker/run_docker_humble.sh
 
 COMPILE:
@@ -14,6 +15,7 @@ run "colcon build" from the parent folder
 EXECUTE:
 
 source install/setup.sh
+
 ros2 launch test_service_client launch_client_servers.launch.py 
 
 TO RUN A STRESS TEST (and reproduce the bug):

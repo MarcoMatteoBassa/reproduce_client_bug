@@ -1,5 +1,8 @@
 SETUP ENVIRONMENT:
-Setup a docker environment from osrf/ros:humble-desktop or install ros2 humble on Ubuntu 22.
+Setup a docker environment from osrf/ros:humble-desktop:
+
+./docker/build_image_humble.sh
+./docker/run_docker_humble.sh
 
 COMPILE
 run "colcon build" from the parent folder
@@ -32,3 +35,8 @@ EXAMPLE OF OUTPUT:
 [service_client-5] [INFO] [1655999164.356904203] [service_client]: Calling service /service_server_2
 [service_server-2] [INFO] [1655999164.357118180] [service_server_2]: Server service_server_2 Responding
 [service_client-5] [ERROR] [1655999167.357424851] [service_client]: Waiting result failed for server /service_server_2
+
+The execution will stop after getting the first error.
+
+I could not reproduce using galactic or a non-docker environment.
+The issue persists using cyclone-dds

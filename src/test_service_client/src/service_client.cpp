@@ -46,7 +46,9 @@ class ServiceClientTest : public rclcpp::Node {
               get_logger(), "Waiting succeeded for server " << client->get_service_name());
         }
       }
-      get_clock()->sleep_for(rclcpp::Duration(100ms));
+      // std::this_thread::sleep_for(100ms);  // On Galactic or earlier
+      get_clock()->sleep_for(rclcpp::Duration(100ms));  // On Humble only
+      // Looping faster (ex 10ms) helps reproducing the issue more frequently
     }
   }
 

@@ -1,9 +1,29 @@
-# pull ros
-FROM osrf/ros:humble-desktop
+ARG FROM_IMAGE=ros:humble
+ARG OVERLAY_WS=/opt/ros/overlay_ws
 
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+FROM $FROM_IMAGE
 
-WORKDIR /home/dev/ros2_ws/
+# clone overlay source
+ARG OVERLAY_WS
+WORKDIR $OVERLAY_WS
+COPY src src
 
-# Add Entrypoint 
-CMD [ "/bin/bash" ]
+# install overlay dependencies
+RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
+    apt-get update && rosdep install -y \
+      --from-paths src \
+      --ignore-src \
+    && rm -rf /var/lib/apt/lists/*
+
+# build overlay source
+RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
+    colcon build
+
+# source entrypoint setup
+ENV OVERLAY_WS $OVERLAY_WS
+RUN sed --in-place --expression \
+      '$isource "$OVERLAY_WS/install/setup.bash"' \
+      /ros_entrypoint.sh
+
+# run launch file
+CMD ["ros2", "launch", "test_service_client", "launch_client_servers.launch.py"]
